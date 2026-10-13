@@ -10,7 +10,7 @@ GitHub repository: https://github.com/Arbabsher12/research-oppounity-portal
 
 - **Step 1 — Project foundation:** repository structure, database schema, Express server bootstrap, database pool, and health endpoint.
 - **Step 2 — CRUD REST API:** database-backed opportunity routes, input validation, and HTTP error responses.
-- Step 3 — Frontend listing, details, create, edit, close, and delete flows.
+- **Step 3 — Frontend:** API-backed listing, search and status filters, full details, create/edit form, close/reopen, delete, and feedback.
 - Step 4 — API test collection and verification.
 - Step 5 — Final documentation and submission checklist.
 
