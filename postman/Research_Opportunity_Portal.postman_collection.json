@@ -1,0 +1,241 @@
+{
+  "info": {
+    "_postman_id": "8b3d4b45-1152-4fc7-bd0d-d0d0e1d04d42",
+    "name": "University Research Opportunity Portal",
+    "description": "End-to-end CRUD and validation checks for the Research Opportunity Portal API. Run the requests in order with the local API server and database available.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Create opportunity 1 (save ID)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Postman Demo - Robotics Assistant\",\n  \"description\": \"Help evaluate autonomous navigation methods in the robotics lab.\",\n  \"research_area\": \"Robotics\",\n  \"faculty_name\": \"Dr. Ayesha Khan\",\n  \"department\": \"Computer Science\",\n  \"required_skills\": \"Python, ROS, basic electronics\",\n  \"available_positions\": 2,\n  \"application_deadline\": \"2027-01-31\"\n}"
+        },
+        "url": "{{baseUrl}}/api/opportunities"
+      },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            "pm.test('Opportunity is created (201)', function () { pm.response.to.have.status(201); });",
+            "if (pm.response.code === 201) {",
+            "  const opportunity = pm.response.json();",
+            "  pm.collectionVariables.set('opportunityId', String(opportunity.id));",
+            "  pm.test('Created opportunity has an ID and defaults to Open', function () {",
+            "    pm.expect(opportunity.id).to.exist;",
+            "    pm.expect(opportunity.status).to.eql('Open');",
+            "  });",
+            "}"
+          ]
+        }
+      }]
+    },
+    {
+      "name": "2. Create opportunity 2",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Postman Demo - Water Quality Study\",\n  \"description\": \"Collect and analyze water samples from local sources.\",\n  \"research_area\": \"Environmental Science\",\n  \"faculty_name\": \"Dr. Omar Siddiqui\",\n  \"department\": \"Environmental Studies\",\n  \"required_skills\": \"Lab methods, data recording\",\n  \"available_positions\": 3,\n  \"application_deadline\": \"2027-02-15\"\n}"
+        },
+        "url": "{{baseUrl}}/api/opportunities"
+      },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            "pm.test('Second opportunity is created (201)', function () { pm.response.to.have.status(201); });",
+            "if (pm.response.code === 201) pm.collectionVariables.set('opportunityId2', String(pm.response.json().id));",
+            "pm.test('Response contains an opportunity ID', function () { pm.expect(pm.response.json().id).to.exist; });"
+          ]
+        }
+      }]
+    },
+    {
+      "name": "3. Create opportunity 3",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Postman Demo - Student Sleep Research\",\n  \"description\": \"Assist with a survey study on student sleep habits.\",\n  \"research_area\": \"Public Health\",\n  \"faculty_name\": \"Dr. Lina Patel\",\n  \"department\": \"Health Sciences\",\n  \"required_skills\": \"Survey design, statistics\",\n  \"available_positions\": 1,\n  \"application_deadline\": \"2027-03-01\"\n}"
+        },
+        "url": "{{baseUrl}}/api/opportunities"
+      },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            "pm.test('Third opportunity is created (201)', function () { pm.response.to.have.status(201); });",
+            "if (pm.response.code === 201) pm.collectionVariables.set('opportunityId3', String(pm.response.json().id));",
+            "pm.test('Response contains an opportunity ID', function () { pm.expect(pm.response.json().id).to.exist; });"
+          ]
+        }
+      }]
+    },
+    {
+      "name": "4. Retrieve all opportunities",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/opportunities" },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            "pm.test('All opportunities are returned (200)', function () { pm.response.to.have.status(200); });",
+            "pm.test('Response is an array containing the three demo records', function () {",
+            "  const opportunities = pm.response.json();",
+            "  pm.expect(opportunities).to.be.an('array');",
+            "  pm.expect(opportunities.filter((item) => item.title.startsWith('Postman Demo -')).length).to.be.at.least(3);",
+            "});"
+          ]
+        }
+      }]
+    },
+    {
+      "name": "5. Retrieve opportunity 1 by ID",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/opportunities/{{opportunityId}}" },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            "pm.test('Opportunity details are returned (200)', function () { pm.response.to.have.status(200); });",
+            "pm.test('Response is the saved opportunity', function () {",
+            "  const opportunity = pm.response.json();",
+            "  pm.expect(String(opportunity.id)).to.eql(pm.collectionVariables.get('opportunityId'));",
+            "  pm.expect(opportunity.title).to.eql('Postman Demo - Robotics Assistant');",
+            "});"
+          ]
+        }
+      }]
+    },
+    {
+      "name": "6. Update opportunity 1",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"required_skills\": \"Python, ROS, data analysis\",\n  \"available_positions\": 4\n}" },
+        "url": "{{baseUrl}}/api/opportunities/{{opportunityId}}"
+      },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            "pm.test('Opportunity is updated (200)', function () { pm.response.to.have.status(200); });",
+            "pm.test('Updated fields are persisted', function () {",
+            "  const opportunity = pm.response.json();",
+            "  pm.expect(opportunity.available_positions).to.eql(4);",
+            "  pm.expect(opportunity.required_skills).to.eql('Python, ROS, data analysis');",
+            "});"
+          ]
+        }
+      }]
+    },
+    {
+      "name": "7. Change status to Closed",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"status\": \"Closed\"\n}" },
+        "url": "{{baseUrl}}/api/opportunities/{{opportunityId}}"
+      },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            "pm.test('Status change succeeds (200)', function () { pm.response.to.have.status(200); });",
+            "pm.test('Opportunity is now Closed', function () { pm.expect(pm.response.json().status).to.eql('Closed'); });"
+          ]
+        }
+      }]
+    },
+    {
+      "name": "8. Delete opportunity 1",
+      "request": { "method": "DELETE", "url": "{{baseUrl}}/api/opportunities/{{opportunityId}}" },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            "pm.test('Opportunity is deleted (200)', function () { pm.response.to.have.status(200); });"
+          ]
+        }
+      }]
+    },
+    {
+      "name": "9. Confirm deleted opportunity returns 404",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/opportunities/{{opportunityId}}" },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            "pm.test('Deleted opportunity is not found (404)', function () { pm.response.to.have.status(404); });",
+            "pm.test('Response explains the missing record', function () { pm.expect(pm.response.json().error).to.include('not found'); });"
+          ]
+        }
+      }]
+    },
+    {
+      "name": "10. Invalid request (missing required fields)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{}" },
+        "url": "{{baseUrl}}/api/opportunities"
+      },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            "pm.test('Invalid request is rejected (400)', function () { pm.response.to.have.status(400); });",
+            "pm.test('Response identifies the validation error', function () { pm.expect(pm.response.json().error).to.be.a('string').and.not.empty; });"
+          ]
+        }
+      }]
+    },
+    {
+      "name": "11. Clean up opportunity 2",
+      "request": { "method": "DELETE", "url": "{{baseUrl}}/api/opportunities/{{opportunityId2}}" },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            "pm.test('Second demo opportunity is cleaned up (200)', function () { pm.response.to.have.status(200); });"
+          ]
+        }
+      }]
+    },
+    {
+      "name": "12. Clean up opportunity 3",
+      "request": { "method": "DELETE", "url": "{{baseUrl}}/api/opportunities/{{opportunityId3}}" },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            "pm.test('Third demo opportunity is cleaned up (200)', function () { pm.response.to.have.status(200); });"
+          ]
+        }
+      }]
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000", "type": "string" },
+    { "key": "opportunityId", "value": "", "type": "string" },
+    { "key": "opportunityId2", "value": "", "type": "string" },
+    { "key": "opportunityId3", "value": "", "type": "string" }
+  ]
+}

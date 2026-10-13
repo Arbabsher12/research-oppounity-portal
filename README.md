@@ -11,7 +11,7 @@ GitHub repository: https://github.com/Arbabsher12/research-oppounity-portal
 - **Step 1 — Project foundation:** repository structure, database schema, Express server bootstrap, database pool, and health endpoint.
 - **Step 2 — CRUD REST API:** database-backed opportunity routes, input validation, and HTTP error responses.
 - **Step 3 — Frontend:** API-backed listing, search and status filters, full details, create/edit form, close/reopen, delete, and feedback.
-- Step 4 — API test collection and verification.
+- **Step 4 — API tests:** exported Postman collection; all 12 requests and 21 assertions pass with Newman.
 - Step 5 — Final documentation and submission checklist.
 
 ## Requirements
@@ -74,6 +74,17 @@ Example create request:
    "status": "Open"
 }
 ```
+
+## Postman collection
+
+The exported collection is `postman/Research_Opportunity_Portal.postman_collection.json`.
+
+1. Start the API and database using the setup instructions above.
+2. In Postman, choose **Import** and select the collection JSON file.
+3. Open the collection and choose **Run**. Run all requests in order so the first create request can save an opportunity ID for later requests.
+4. Confirm all requests and tests pass. The collection creates three demo opportunities, updates and closes one, deletes it and confirms the `404`, sends an invalid request for the `400`, then deletes the other two demo records.
+
+The collection was also run locally with Newman: 12 requests, 21 assertions, 0 failures.
 
 ## Assignment deliverables
 
