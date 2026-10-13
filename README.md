@@ -4,12 +4,12 @@ A web application for managing university research openings. The planned stack i
 
 ## Repository
 
-GitHub repository: _Add your repository URL after creating it._
+GitHub repository: https://github.com/Arbabsher12/research-oppounity-portal
 
 ## Current progress
 
-- **Step 1 — Project foundation:** repository structure, MySQL schema, Express server bootstrap, database pool, and health endpoint.
-- Step 2 — CRUD REST API and validation.
+- **Step 1 — Project foundation:** repository structure, database schema, Express server bootstrap, database pool, and health endpoint.
+- **Step 2 — CRUD REST API:** database-backed opportunity routes, input validation, and HTTP error responses.
 - Step 3 — Frontend listing, details, create, edit, close, and delete flows.
 - Step 4 — API test collection and verification.
 - Step 5 — Final documentation and submission checklist.
@@ -17,17 +17,17 @@ GitHub repository: _Add your repository URL after creating it._
 ## Requirements
 
 - Node.js 18.11 or newer
-- MySQL 8 or newer, running locally
+- MySQL 8 or a compatible MariaDB server, running locally
 
 ## Setup
 
-1. Create the database and table using the SQL setup file:
+1. Create the database and table using `database/schema.sql`. In XAMPP, start the MySQL module, open phpMyAdmin, select **Import**, and choose the schema file. You can also run it with the MySQL command-line client:
 
    ```powershell
    Get-Content .\database\schema.sql | mysql -u root -p
    ```
 
-   Enter your local MySQL password when prompted. Alternatively, open `database/schema.sql` in MySQL Workbench and execute it.
+   Enter your local database password when prompted. MySQL Workbench can also execute the schema file.
 
 2. Install the Node dependencies:
 
@@ -43,11 +43,37 @@ GitHub repository: _Add your repository URL after creating it._
    npm run dev
    ```
 
-5. Visit `http://localhost:3000` for the frontend shell and `http://localhost:3000/api/health` to check the server/database connection.
+5. Visit `http://localhost:3000` for the frontend and `http://localhost:3000/api/health` to check the server/database connection.
 
 ## API
 
-The CRUD endpoints will be documented here after implementation in Step 2.
+All endpoints use JSON. The API returns `400` for invalid input, `404` when an opportunity does not exist, and `500` for an unexpected server/database error.
+
+| Method | Endpoint | Success response |
+| --- | --- | --- |
+| `GET` | `/api/opportunities` | `200` and an array of opportunities |
+| `GET` | `/api/opportunities/:id` | `200` and one opportunity |
+| `POST` | `/api/opportunities` | `201` and the created opportunity |
+| `PUT` | `/api/opportunities/:id` | `200` and the updated opportunity |
+| `DELETE` | `/api/opportunities/:id` | `200` and a confirmation message |
+
+Create requests require `title`, `description`, `research_area`, `faculty_name`, `department`, `required_skills`, `available_positions` (positive integer), and `application_deadline` (`YYYY-MM-DD`). `status` is optional and defaults to `Open`; valid values are `Open` and `Closed`. PUT accepts one or more of these fields to update.
+
+Example create request:
+
+```json
+{
+   "title": "Undergraduate Robotics Research Assistant",
+   "description": "Assist with testing autonomous navigation methods.",
+   "research_area": "Robotics",
+   "faculty_name": "Dr. Ayesha Khan",
+   "department": "Computer Science",
+   "required_skills": "Python, ROS, basic electronics",
+   "available_positions": 2,
+   "application_deadline": "2027-01-31",
+   "status": "Open"
+}
+```
 
 ## Assignment deliverables
 
